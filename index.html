@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Football Fund</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600&family=Kanit:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --green: #1D9E75;
+  --green-light: #E1F5EE;
+  --green-dark: #0F6E56;
+  --amber: #854F0B;
+  --amber-light: #FAEEDA;
+  --red-light: #FBEAF0;
+  --red: #993556;
+  --blue-light: #E6F1FB;
+  --blue: #185FA5;
+  --bg: #F4F3F0;
+  --card: #FFFFFF;
+  --border: rgba(0,0,0,0.08);
+  --text: #1a1a1a;
+  --muted: #888;
+  --radius: 12px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Sarabun', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; font-size: 15px; }
+h1,h2,h3,h4 { font-family: 'Kanit', sans-serif; }
+
+/* NAV */
+nav { background: #fff; border-bottom: 1px solid var(--border); padding: 0 24px; display: flex; align-items: center; justify-content: space-between; height: 56px; position: sticky; top: 0; z-index: 100; }
+.nav-logo { display: flex; align-items: center; gap: 10px; }
+.logo-icon { width: 32px; height: 32px; background: var(--green); border-radius: 8px; display: flex; align-items: center; justify-content: center; }
+.logo-icon svg { width: 18px; height: 18px; fill: #fff; }
+.logo-text { font-family: 'Kanit', sans-serif; font-size: 16px; font-weight: 600; color: var(--text); }
+.logo-sub { font-size: 12px; color: var(--muted); margin-top: -2px; }
+.nav-right { display: flex; align-items: center; gap: 8px; }
+.season-badge { background: var(--green-light); color: var(--green-dark); font-size: 12px; padding: 4px 12px; border-radius: 20px; font-weight: 500; }
+
+/* LAYOUT */
+.container { max-width: 860px; margin: 0 auto; padding: 24px 16px; }
+
+/* STATS */
+.stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px; }
+.stat-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; }
+.stat-label { font-size: 12px; color: var(--muted); margin-bottom: 6px; display: flex; align-items: center; gap: 5px; }
+.stat-value { font-family: 'Kanit', sans-serif; font-size: 26px; font-weight: 600; color: var(--text); line-height: 1; }
+.stat-unit { font-size: 11px; color: var(--muted); margin-top: 3px; }
+.stat-value.green { color: var(--green); }
+.stat-value.amber { color: var(--amber); }
+
+/* CARDS */
+.card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 16px; overflow: hidden; }
+.card-header { padding: 14px 18px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+.card-title { font-family: 'Kanit', sans-serif; font-size: 14px; font-weight: 500; display: flex; align-items: center; gap: 7px; }
+.card-title svg { width: 16px; height: 16px; stroke: var(--blue); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+/* BUTTONS */
+.btn { display: inline-flex; align-items: center; gap: 5px; padding: 7px 14px; border-radius: 8px; font-size: 13px; font-family: 'Sarabun', sans-serif; font-weight: 500; cursor: pointer; border: none; transition: opacity 0.15s; }
+.btn:hover { opacity: 0.85; }
+.btn:active { transform: scale(0.97); }
+.btn-green { background: var(--green); color: #fff; }
+.btn-outline { background: #f5f5f3; color: var(--text); border: 1px solid var(--border); }
+.btn-sm { padding: 5px 10px; font-size: 12px; border-radius: 6px; }
+.btn-row { display: flex; gap: 7px; }
+.btn-icon { width: 28px; height: 28px; border-radius: 6px; border: none; background: #f5f5f3; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; transition: background 0.15s; }
+.btn-icon:hover { background: #eae9e5; }
+.btn-icon svg { width: 14px; height: 14px; stroke: var(--muted); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.btn-icon.danger:hover { background: #fee2e2; }
+.btn-icon.danger:hover svg { stroke: #dc2626; }
+
+/* SESSIONS */
+.session-row { padding: 12px 18px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid var(--border); transition: background 0.12s; }
+.session-row:last-child { border-bottom: none; }
+.session-row:hover { background: #fafaf8; }
+.sess-icon { width: 36px; height: 36px; border-radius: 9px; background: var(--green-light); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.sess-icon svg { width: 18px; height: 18px; stroke: var(--green-dark); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.sess-icon.warn { background: var(--amber-light); }
+.sess-icon.warn svg { stroke: var(--amber); }
+.sess-info { flex: 1; min-width: 0; }
+.sess-date { font-size: 13px; font-weight: 500; }
+.sess-meta { font-size: 12px; color: var(--muted); margin-top: 1px; }
+.sess-right { text-align: right; flex-shrink: 0; }
+.sess-cost { font-family: 'Kanit', sans-serif; font-size: 15px; font-weight: 500; }
+.sess-per { font-size: 12px; color: var(--green); margin-top: 1px; }
+.sess-per.warn { color: var(--amber); }
+
+/* TWO COL */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+
+/* PROGRESS */
+.progress-wrap { margin-top: 10px; }
+.progress-bar { background: #eee; border-radius: 20px; height: 7px; overflow: hidden; }
+.progress-fill { background: var(--green); height: 7px; border-radius: 20px; transition: width 0.4s ease; }
+.progress-label { font-size: 11px; color: var(--muted); text-align: right; margin-top: 4px; }
+
+/* SUMMARY ROWS */
+.sum-row { display: flex; justify-content: space-between; align-items: center; padding: 7px 0; border-bottom: 1px solid var(--border); }
+.sum-row:last-of-type { border-bottom: none; }
+.sum-row span { font-size: 13px; color: var(--muted); }
+.sum-row strong { font-size: 14px; font-family: 'Kanit', sans-serif; font-weight: 500; }
+
+/* BAR CHART */
+.bar-chart-area { padding: 14px 18px; }
+.bar-chart { display: flex; align-items: flex-end; gap: 8px; height: 80px; margin-bottom: 6px; }
+.bar-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 0; }
+.bar { width: 100%; border-radius: 5px 5px 0 0; transition: opacity 0.15s; cursor: default; }
+.bar:hover { opacity: 0.8; }
+.bar-lbl { font-size: 11px; color: var(--muted); margin-top: 5px; }
+.bar-val { font-size: 10px; font-weight: 500; color: var(--green); margin-bottom: 3px; }
+
+/* FILTER CHIPS */
+.chips { display: flex; gap: 6px; padding: 10px 18px; background: #fafaf8; border-bottom: 1px solid var(--border); }
+.chip { font-size: 12px; padding: 4px 12px; border-radius: 20px; border: 1px solid var(--border); background: #fff; color: var(--muted); cursor: pointer; transition: all 0.12s; user-select: none; }
+.chip:hover { border-color: var(--green); color: var(--green); }
+.chip.active { background: var(--green); color: #fff; border-color: var(--green); }
+
+/* TABLE */
+.ptable { width: 100%; border-collapse: collapse; table-layout: fixed; }
+.ptable th { font-size: 12px; color: var(--muted); font-weight: 500; padding: 9px 18px; text-align: left; background: #fafaf8; border-bottom: 1px solid var(--border); font-family: 'Sarabun', sans-serif; }
+.ptable td { font-size: 13px; padding: 10px 18px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+.ptable tr:last-child td { border-bottom: none; }
+.ptable tr:hover td { background: #fafaf8; }
+.pname { display: flex; align-items: center; gap: 8px; }
+.avatar { width: 28px; height: 28px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; flex-shrink: 0; font-family: 'Kanit', sans-serif; }
+.note-text { font-size: 12px; color: var(--muted); font-style: italic; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tag { font-size: 11px; padding: 3px 9px; border-radius: 20px; font-weight: 500; }
+.tag.paid { background: #EAF3DE; color: #3B6D11; }
+.tag.due { background: var(--amber-light); color: var(--amber); }
+.amt.paid { color: #3B6D11; font-weight: 600; font-family: 'Kanit', sans-serif; }
+.amt.due { color: var(--amber); font-weight: 600; font-family: 'Kanit', sans-serif; }
+.actions { display: flex; gap: 5px; justify-content: flex-end; }
+
+/* ADD ROW */
+.add-row { padding: 10px 18px; background: #fafaf8; border-top: 1px solid var(--border); display: flex; gap: 8px; align-items: center; }
+.inp { flex: 1; height: 34px; border: 1px solid var(--border); border-radius: 7px; background: #fff; padding: 0 12px; font-size: 13px; font-family: 'Sarabun', sans-serif; color: var(--text); outline: none; transition: border-color 0.15s; }
+.inp:focus { border-color: var(--green); }
+.inp::placeholder { color: #ccc; }
+select.inp { cursor: pointer; }
+
+/* BOTTOM BAR */
+.bottom-bar { padding: 11px 18px; background: #fafaf8; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+.bottom-bar-text { font-size: 13px; color: var(--muted); }
+.bottom-bar-text strong { color: var(--text); font-weight: 500; }
+
+/* MODAL */
+.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.35); z-index: 200; align-items: center; justify-content: center; padding: 16px; }
+.modal-overlay.open { display: flex; }
+.modal { background: #fff; border-radius: 16px; padding: 24px; width: 100%; max-width: 440px; }
+.modal h3 { font-family: 'Kanit', sans-serif; font-size: 16px; font-weight: 500; margin-bottom: 16px; }
+.modal-field { margin-bottom: 12px; }
+.modal-field label { display: block; font-size: 12px; color: var(--muted); margin-bottom: 5px; }
+.modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 20px; }
+
+/* TOAST */
+.toast { position: fixed; bottom: 24px; right: 24px; background: #222; color: #fff; padding: 10px 18px; border-radius: 10px; font-size: 13px; z-index: 300; opacity: 0; transform: translateY(8px); transition: all 0.25s; pointer-events: none; }
+.toast.show { opacity: 1; transform: translateY(0); }
+
+/* EMPTY */
+.empty-state { text-align: center; padding: 32px; color: var(--muted); font-size: 14px; }
+
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+/* RESPONSIVE */
+@media (max-width: 640px) {
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .two-col { grid-template-columns: 1fr; }
+  nav { padding: 0 12px; }
+  .container { padding: 12px 8px; }
+
+  /* hide table columns on mobile — show card layout instead */
+  .ptable, .ptable thead, .ptable tbody, .ptable th, .ptable td, .ptable tr { display: block; }
+  .ptable thead { display: none; }
+  .ptable tr { border: none; border-bottom: 1px solid var(--border); padding: 10px 14px; }
+  .ptable tr:last-child { border-bottom: none; }
+  .ptable td { padding: 3px 0; border: none; font-size: 13px; }
+  .ptable tr:hover td { background: transparent; }
+
+  .player-card-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+  .player-card-left { flex: 1; min-width: 0; }
+  .player-card-right { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex-shrink: 0; }
+
+  .add-row { flex-wrap: wrap; }
+  .add-row .inp { min-width: 0; }
+
+  .bottom-bar { flex-direction: column; align-items: flex-start; gap: 8px; }
+
+  .card-header { flex-wrap: wrap; gap: 8px; }
+
+  .sess-meta { font-size: 11px; }
+
+  .chips { flex-wrap: wrap; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">
+    <div class="logo-icon">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 1 6.32 17.45M12 2a10 10 0 0 0-6.32 17.45M12 22v-4M6 6l3 3M18 6l-3 3M9 15l-3 3M15 15l3 3" stroke="#fff" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
+    </div>
+    <div>
+      <div class="logo-text">Football Fund</div>
+    </div>
+  </div>
+  <div class="nav-right">
+    <div id="syncStatus" style="display:none;align-items:center;gap:6px;font-size:12px;color:var(--muted);">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="animation:spin 1s linear infinite;">
+        <polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+      </svg>
+      กำลังซิงค์...
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+
+  <!-- STATS -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-label">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM1 13s1-4 8-4"/></svg>
+        สมาชิก
+      </div>
+      <div class="stat-value" id="statMembers">0</div>
+      <div class="stat-unit">คน</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="1" y="3" width="12" height="11" rx="2"/><path d="M9 1v4M5 1v4M1 7h12"/></svg>
+        ค่าสนามล่าสุด
+      </div>
+      <div class="stat-value" id="statCost">-</div>
+      <div class="stat-unit" id="statPerPerson">-</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M1 7l4 4 8-8"/></svg>
+        จ่ายแล้ว
+      </div>
+      <div class="stat-value green" id="statPaid">0</div>
+      <div class="stat-unit">คน</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="7" cy="7" r="6"/><path d="M7 4v3l2 2"/></svg>
+        ค้างชำระ
+      </div>
+      <div class="stat-value amber" id="statDue">0</div>
+      <div class="stat-unit">คน</div>
+    </div>
+  </div>
+
+  <!-- TWO COL -->
+  <div class="two-col">
+    <!-- BAR CHART -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">
+          <svg viewBox="0 0 24 24"><rect x="3" y="12" width="4" height="9"/><rect x="10" y="7" width="4" height="14"/><rect x="17" y="3" width="4" height="18"/></svg>
+          ยอดเก็บรายรอบ
+        </div>
+      </div>
+      <div class="bar-chart-area">
+        <div class="bar-chart" id="barChart"><div class="empty-state" style="padding:8px;font-size:12px;width:100%;">ยังไม่มีข้อมูล</div></div>
+      </div>
+    </div>
+
+    <!-- SUMMARY -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          สรุปรอบปัจจุบัน
+        </div>
+      </div>
+      <div style="padding:12px 18px;">
+        <div class="sum-row"><span>ค่าสนามทั้งหมด</span><strong id="sumTotal">฿0</strong></div>
+        <div class="sum-row"><span>เก็บได้แล้ว</span><strong id="sumCollected" style="color:var(--green)">฿0</strong></div>
+        <div class="sum-row"><span>ค้างชำระ</span><strong id="sumRemaining" style="color:var(--amber)">฿0</strong></div>
+        <div class="progress-wrap">
+          <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+          <div class="progress-label" id="progressLabel">0% ของเป้าหมาย</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SESSIONS -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">
+        <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+        ประวัติการเตะ
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-outline btn-sm" onclick="exportExcel()">
+          <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 1H2a1 1 0 0 0-1 1v9a1 1 0 0 0 1 1h9a1 1 0 0 0 1-1V9M8 1h4v4M12 1L6 7"/></svg>
+          Export Excel
+        </button>
+        <button class="btn btn-green btn-sm" onclick="openAddSession()">+ เพิ่มรอบ</button>
+      </div>
+    </div>
+    <div id="sessionList"><div class="empty-state">ยังไม่มีรอบการเตะ กด "เพิ่มรอบ" เพื่อเริ่มต้น</div></div>
+  </div>
+
+  <!-- PLAYERS -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">
+        <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        รายชื่อสมาชิก
+        <span id="sessionLabel" style="font-size:12px;color:var(--muted);font-weight:400;margin-left:4px;"></span>
+      </div>
+      <button class="btn btn-green btn-sm" onclick="openAddPlayer()">+ เพิ่มคน</button>
+    </div>
+    <div class="chips">
+      <span class="chip active" onclick="filterPlayers('all', this)">ทั้งหมด (<span id="countAll">0</span>)</span>
+      <span class="chip" onclick="filterPlayers('paid', this)">จ่ายแล้ว (<span id="countPaid">0</span>)</span>
+      <span class="chip" onclick="filterPlayers('due', this)">ยังไม่จ่าย (<span id="countDue">0</span>)</span>
+    </div>
+    <div style="overflow-x:auto;">
+      <table class="ptable">
+        <colgroup><col style="width:26%"><col style="width:30%"><col style="width:16%"><col style="width:14%"><col style="width:14%"></colgroup>
+        <thead>
+          <tr>
+            <th>ชื่อ</th>
+            <th>หมายเหตุ</th>
+            <th>สถานะ</th>
+            <th style="text-align:right;">ยอด</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="playerTableBody"></tbody>
+      </table>
+    </div>
+    <div class="add-row">
+      <svg width="18" height="18" fill="none" stroke="#ccc" stroke-width="1.8" stroke-linecap="round"><path d="M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM2 17s0-4 10-4M17 7v6M14 10h6"/></svg>
+      <input class="inp" id="quickName" placeholder="ชื่อผู้เล่นใหม่..." onkeydown="if(event.key==='Enter')quickAdd()">
+      <input class="inp" id="quickNote" placeholder="หมายเหตุ..." style="max-width:180px;" onkeydown="if(event.key==='Enter')quickAdd()">
+      <button class="btn btn-green btn-sm" onclick="quickAdd()">เพิ่ม</button>
+    </div>
+    <div class="bottom-bar">
+      <div class="bottom-bar-text">รวมที่เก็บได้ <strong id="footCollected">฿0</strong> · คงเหลือ <strong id="footRemaining" style="color:var(--amber)">฿0</strong></div>
+      <button class="btn btn-outline btn-sm" onclick="exportExcel()">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 1H2a1 1 0 0 0-1 1v9a1 1 0 0 0 1 1h9a1 1 0 0 0 1-1V9M8 1h4v4M12 1L6 7"/></svg>
+        Export Excel
+      </button>
+    </div>
+  </div>
+
+</div>
+
+<!-- ADD SESSION MODAL -->
+<div class="modal-overlay" id="sessionModal">
+  <div class="modal">
+    <h3>เพิ่มรอบการเตะ</h3>
+    <div class="modal-field">
+      <label>วันที่</label>
+      <input class="inp" type="date" id="sessDate" style="width:100%;">
+    </div>
+    <div class="modal-field">
+      <label>ชื่อสนาม</label>
+      <input class="inp" type="text" id="sessVenue" placeholder="เช่น สนามชัยพัฒนา" style="width:100%;">
+    </div>
+    <div class="modal-field">
+      <label>ค่าสนาม (บาท)</label>
+      <input class="inp" type="number" id="sessCost" placeholder="1200" style="width:100%;" min="0">
+    </div>
+    <div class="modal-field">
+      <label>เวลา</label>
+      <input class="inp" type="text" id="sessTime" placeholder="18:00–20:00" style="width:100%;">
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="closeModal('sessionModal')">ยกเลิก</button>
+      <button class="btn btn-green" onclick="addSession()">บันทึก</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD PLAYER MODAL -->
+<div class="modal-overlay" id="playerModal">
+  <div class="modal">
+    <h3>เพิ่มสมาชิก</h3>
+    <div class="modal-field">
+      <label>ชื่อ</label>
+      <input class="inp" type="text" id="playerName" placeholder="ชื่อ-นามสกุล" style="width:100%;">
+    </div>
+    <div class="modal-field">
+      <label>หมายเหตุ</label>
+      <input class="inp" type="text" id="playerNote" placeholder="เช่น โอนแล้ว, จ่ายสด" style="width:100%;">
+    </div>
+    <div class="modal-field">
+      <label>สถานะ</label>
+      <select class="inp" id="playerStatus" style="width:100%;">
+        <option value="due">ยังไม่จ่าย</option>
+        <option value="paid">จ่ายแล้ว</option>
+      </select>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="closeModal('playerModal')">ยกเลิก</button>
+      <button class="btn btn-green" onclick="addPlayer()">บันทึก</button>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT PLAYER MODAL -->
+<div class="modal-overlay" id="editPlayerModal">
+  <div class="modal">
+    <h3>แก้ไขข้อมูลสมาชิก</h3>
+    <input type="hidden" id="editPlayerId">
+    <div class="modal-field"><label>ชื่อ</label><input class="inp" type="text" id="editPlayerName" style="width:100%;"></div>
+    <div class="modal-field"><label>หมายเหตุ</label><input class="inp" type="text" id="editPlayerNote" placeholder="เช่น โอนแล้ว, จ่ายสด" style="width:100%;"></div>
+    <div class="modal-field"><label>สถานะ</label><select class="inp" id="editPlayerStatus" style="width:100%;"><option value="due">ยังไม่จ่าย</option><option value="paid">จ่ายแล้ว</option></select></div>
+    <div class="modal-field"><label>ยอดเงิน (บาท) — ปล่อยว่างเพื่อใช้การหารเท่ากัน</label><input class="inp" type="number" id="editPlayerAmount" placeholder="เช่น 150" style="width:100%;" min="0"></div>
+    <div class="modal-actions"><button class="btn btn-outline" onclick="closeModal('editPlayerModal')">ยกเลิก</button><button class="btn btn-green" onclick="saveEditPlayer()">บันทึก</button></div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- Firebase SDK -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, doc, getDoc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBmd7NQjW_cN7Z_0SOTvQvdaXxyUeeQ33I",
+  authDomain: "football-fund-36696.firebaseapp.com",
+  projectId: "football-fund-36696",
+  storageBucket: "football-fund-36696.firebasestorage.app",
+  messagingSenderId: "174451066224",
+  appId: "1:174451066224:web:28392ce90c2aa276f7fbb5"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const DOC_REF = doc(db, "football-fund", "main");
+
+// ---- expose globals needed by inline onclick handlers ----
+window._db = db;
+window._docRef = DOC_REF;
+window._setDoc = setDoc;
+window._onSnapshot = onSnapshot;
+window._getDoc = getDoc;
+
+const COLORS = ['#E6F1FB:#185FA5','#E1F5EE:#0F6E56','#FAEEDA:#854F0B','#FBEAF0:#993556','#EAF3DE:#3B6D11','#EEEDFE:#3C3489'];
+let currentFilter = 'all';
+
+// STATE
+let state = {
+  sessions: [],
+  players: [],
+  currentSessionId: null
+};
+
+// LOAD — listen realtime from Firestore
+function load() {
+  showSyncing(true);
+  onSnapshot(DOC_REF, (snap) => {
+    if (snap.exists()) {
+      state = snap.data();
+    }
+    showSyncing(false);
+    render();
+  }, (err) => {
+    console.error('Firestore error:', err);
+    showSyncing(false);
+    // fallback to localStorage
+    try {
+      const s = localStorage.getItem('ffund');
+      if (s) state = JSON.parse(s);
+    } catch(e) {}
+    render();
+    toast('⚠️ ออฟไลน์ — ใช้ข้อมูลในเครื่อง');
+  });
+}
+
+async function save() {
+  try {
+    await setDoc(DOC_REF, JSON.parse(JSON.stringify(state)));
+    // backup to localStorage too
+    localStorage.setItem('ffund', JSON.stringify(state));
+  } catch(e) {
+    console.error('Save error:', e);
+    // fallback save locally
+    try { localStorage.setItem('ffund', JSON.stringify(state)); } catch(e2) {}
+    toast('⚠️ บันทึกเฉพาะในเครื่อง (ออฟไลน์)');
+  }
+}
+
+function showSyncing(on) {
+  const el = document.getElementById('syncStatus');
+  if (el) el.style.display = on ? 'flex' : 'none';
+}
+
+// UTILS
+function fmtDate(d) {
+  if (!d) return '';
+  const dt = new Date(d);
+  const days = ['อา.','จ.','อ.','พ.','พฤ.','ศ.','ส.'];
+  const months = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+  return `${days[dt.getDay()]} ${dt.getDate()} ${months[dt.getMonth()]} ${dt.getFullYear()+543}`;
+}
+
+function getInitials(name) {
+  const parts = name.trim().split(' ');
+  if (parts.length >= 2) return parts[0].slice(0,1) + parts[1].slice(0,1);
+  return name.slice(0,2);
+}
+
+function getColor(name) {
+  let hash = 0;
+  for (let c of name) hash = (hash * 31 + c.charCodeAt(0)) % COLORS.length;
+  return COLORS[Math.abs(hash)].split(':');
+}
+
+function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2,5); }
+
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+// SESSIONS
+function openAddSession() {
+  const today = new Date().toISOString().slice(0,10);
+  document.getElementById('sessDate').value = today;
+  document.getElementById('sessVenue').value = '';
+  document.getElementById('sessCost').value = '';
+  document.getElementById('sessTime').value = '18:00–20:00';
+  document.getElementById('sessionModal').classList.add('open');
+}
+
+function addSession() {
+  const date = document.getElementById('sessDate').value;
+  const venue = document.getElementById('sessVenue').value.trim();
+  const cost = parseInt(document.getElementById('sessCost').value) || 0;
+  const time = document.getElementById('sessTime').value.trim();
+  if (!date || !venue || !cost) { toast('กรุณากรอกข้อมูลให้ครบ'); return; }
+  const sess = { id: uid(), date, venue, cost, time, players: [] };
+  state.sessions.unshift(sess);
+  if (!state.currentSessionId) state.currentSessionId = sess.id;
+  closeModal('sessionModal');
+  save(); render();
+  toast('เพิ่มรอบการเตะแล้ว');
+}
+
+function selectSession(id) {
+  state.currentSessionId = id;
+  currentFilter = 'all';
+  save(); render();
+}
+
+function deleteSession(id) {
+  if (!confirm('ลบรอบนี้?')) return;
+  state.sessions = state.sessions.filter(s => s.id !== id);
+  if (state.currentSessionId === id) state.currentSessionId = state.sessions[0]?.id || null;
+  save(); render();
+  toast('ลบรอบแล้ว');
+}
+
+// PLAYERS
+function currentSession() { return state.sessions.find(s => s.id === state.currentSessionId); }
+
+function openAddPlayer() {
+  if (!state.currentSessionId) { toast('กรุณาเพิ่มรอบการเตะก่อน'); return; }
+  document.getElementById('playerName').value = '';
+  document.getElementById('playerNote').value = '';
+  document.getElementById('playerStatus').value = 'due';
+  document.getElementById('playerModal').classList.add('open');
+}
+
+function addPlayer() {
+  const name = document.getElementById('playerName').value.trim();
+  const note = document.getElementById('playerNote').value.trim();
+  const status = document.getElementById('playerStatus').value;
+  if (!name) { toast('กรุณาใส่ชื่อ'); return; }
+  const sess = currentSession();
+  if (!sess) return;
+  sess.players.push({ id: uid(), name, note, status });
+  closeModal('playerModal');
+  save(); render();
+  toast(`เพิ่ม ${name} แล้ว`);
+}
+
+function quickAdd() {
+  if (!state.currentSessionId) { toast('กรุณาเพิ่มรอบการเตะก่อน'); return; }
+  const name = document.getElementById('quickName').value.trim();
+  const note = document.getElementById('quickNote').value.trim();
+  if (!name) { document.getElementById('quickName').focus(); return; }
+  const sess = currentSession();
+  sess.players.push({ id: uid(), name, note, status: 'due' });
+  document.getElementById('quickName').value = '';
+  document.getElementById('quickNote').value = '';
+  document.getElementById('quickName').focus();
+  save(); render();
+  toast(`เพิ่ม ${name} แล้ว`);
+}
+
+function toggleStatus(playerId) {
+  const sess = currentSession();
+  if (!sess) return;
+  const p = sess.players.find(p => p.id === playerId);
+  if (!p) return;
+  p.status = p.status === 'paid' ? 'due' : 'paid';
+  save(); render();
+}
+
+function deletePlayer(playerId) {
+  const sess = currentSession();
+  if (!sess) return;
+  sess.players = sess.players.filter(p => p.id !== playerId);
+  save(); render();
+  toast('ลบสมาชิกแล้ว');
+}
+
+function openEditPlayer(playerId) {
+  const sess = currentSession();
+  if (!sess) return;
+  const p = sess.players.find(p => p.id === playerId);
+  if (!p) return;
+  document.getElementById('editPlayerId').value = p.id;
+  document.getElementById('editPlayerName').value = p.name;
+  document.getElementById('editPlayerNote').value = p.note || '';
+  document.getElementById('editPlayerStatus').value = p.status;
+  document.getElementById('editPlayerAmount').value = p.customAmount || '';
+  document.getElementById('editPlayerModal').classList.add('open');
+}
+
+function saveEditPlayer() {
+  const sess = currentSession();
+  if (!sess) return;
+  const id = document.getElementById('editPlayerId').value;
+  const p = sess.players.find(p => p.id === id);
+  if (!p) return;
+  p.name = document.getElementById('editPlayerName').value.trim() || p.name;
+  p.note = document.getElementById('editPlayerNote').value.trim();
+  p.status = document.getElementById('editPlayerStatus').value;
+  const amtVal = document.getElementById('editPlayerAmount').value;
+  p.customAmount = (amtVal !== '' && amtVal !== null) ? parseInt(amtVal) : null;
+  closeModal('editPlayerModal');
+  save(); render();
+  toast('บันทึกแล้ว');
+}
+
+function filterPlayers(f, el) {
+  currentFilter = f;
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  renderPlayerTable();
+}
+
+// MODALS
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+document.querySelectorAll('.modal-overlay').forEach(m => m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); }));
+
+// EXPORT EXCEL
+function exportExcel() {
+  const sess = currentSession();
+  if (!sess) { toast('ไม่มีข้อมูลให้ export'); return; }
+  const perPerson = sess.players.length ? Math.round(sess.cost / sess.players.length) : 0;
+  let csv = '\uFEFF'; // BOM for Thai
+  csv += `Football Fund - ${sess.venue} - ${fmtDate(sess.date)}\n`;
+  csv += `ค่าสนาม,${sess.cost} บาท\n`;
+  csv += `จำนวนคน,${sess.players.length} คน\n`;
+  csv += `หัวละ,${perPerson} บาท\n\n`;
+  csv += `ชื่อ,หมายเหตุ,สถานะ,ยอด (บาท)\n`;
+  sess.players.forEach(p => {
+    const amt = p.customAmount || perPerson;
+    const status = p.status === 'paid' ? 'จ่ายแล้ว' : 'ยังไม่จ่าย';
+    csv += `${p.name},${p.note || ''},${status},${amt}\n`;
+  });
+  const paidPlayers = sess.players.filter(p => p.status === 'paid');
+  const duePlayers = sess.players.filter(p => p.status === 'due');
+  const paidTotal = paidPlayers.reduce((s, p) => s + (p.customAmount || perPerson), 0);
+  const dueTotal = duePlayers.reduce((s, p) => s + (p.customAmount || perPerson), 0);
+  csv += `\nสรุป\n`;
+  csv += `จ่ายแล้ว,${paidPlayers.length} คน,${paidTotal} บาท\n`;
+  csv += `ค้างชำระ,${duePlayers.length} คน,${dueTotal} บาท\n`;
+
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `football-fund-${sess.date}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+  toast('Export สำเร็จ');
+}
+
+// RENDER
+function render() {
+  renderStats();
+  renderSessions();
+  renderPlayerTable();
+  renderBarChart();
+  renderSummary();
+}
+
+function renderStats() {
+  const sess = currentSession();
+  const players = sess ? sess.players : [];
+  const paid = players.filter(p => p.status === 'paid').length;
+  const due = players.filter(p => p.status === 'due').length;
+  const perPerson = players.length && sess ? Math.round(sess.cost / players.length) : 0;
+
+  document.getElementById('statMembers').textContent = players.length;
+  document.getElementById('statCost').textContent = sess ? `฿${sess.cost.toLocaleString()}` : '-';
+  document.getElementById('statPerPerson').textContent = perPerson ? `฿${perPerson}/คน` : '-';
+  document.getElementById('statPaid').textContent = paid;
+  document.getElementById('statDue').textContent = due;
+}
+
+function renderSessions() {
+  const list = document.getElementById('sessionList');
+  if (!state.sessions.length) {
+    list.innerHTML = '<div class="empty-state">ยังไม่มีรอบการเตะ กด "เพิ่มรอบ" เพื่อเริ่มต้น</div>';
+    return;
+  }
+  list.innerHTML = state.sessions.map(s => {
+    const pp = s.players.length ? Math.round(s.cost / s.players.length) : 0;
+    const isActive = s.id === state.currentSessionId;
+    const highCost = pp > 150;
+    return `
+    <div class="session-row" style="${isActive ? 'background:#f9fffe;' : ''}" onclick="selectSession('${s.id}')" style="cursor:pointer;">
+      <div class="sess-icon ${highCost ? 'warn' : ''}">
+        <svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:${highCost ? 'var(--amber)' : 'var(--green-dark)'};fill:none;stroke-width:1.8;stroke-linecap:round;">
+          <circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 1 6 17M12 2a10 10 0 0 0-6 17"/>
+        </svg>
+      </div>
+      <div class="sess-info">
+        <div class="sess-date">${fmtDate(s.date)}${isActive ? ' <span style="font-size:11px;background:var(--green-light);color:var(--green-dark);padding:1px 7px;border-radius:20px;margin-left:4px;">กำลังดู</span>' : ''}</div>
+        <div class="sess-meta">${s.venue} · ${s.players.length} คน${s.time ? ' · ' + s.time : ''}</div>
+      </div>
+      <div class="sess-right">
+        <div class="sess-cost">฿${s.cost.toLocaleString()}</div>
+        <div class="sess-per ${highCost ? 'warn' : ''}">${pp ? '฿' + pp + ' / คน' : '-'}</div>
+      </div>
+      <div style="display:flex;gap:4px;margin-left:8px;" onclick="event.stopPropagation()">
+        <button class="btn-icon danger" onclick="deleteSession('${s.id}')">
+          <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6M10 11v6M14 11v6M9 6V4h6v2"/></svg>
+        </button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderPlayerTable() {
+  const sess = currentSession();
+  const players = sess ? sess.players : [];
+  const defaultPerPerson = players.length && sess ? Math.round(sess.cost / players.length) : 0;
+
+  const paid = players.filter(p => p.status === 'paid').length;
+  const due = players.filter(p => p.status === 'due').length;
+  document.getElementById('countAll').textContent = players.length;
+  document.getElementById('countPaid').textContent = paid;
+  document.getElementById('countDue').textContent = due;
+  document.getElementById('sessionLabel').textContent = sess ? `— ${fmtDate(sess.date)}` : '';
+
+  let filtered = players;
+  if (currentFilter === 'paid') filtered = players.filter(p => p.status === 'paid');
+  if (currentFilter === 'due') filtered = players.filter(p => p.status === 'due');
+
+  const tbody = document.getElementById('playerTableBody');
+  if (!players.length) {
+    tbody.innerHTML = `<tr><td colspan="5" class="empty-state">ยังไม่มีสมาชิกในรอบนี้</td></tr>`;
+    return;
+  }
+  if (!filtered.length) {
+    tbody.innerHTML = `<tr><td colspan="5" class="empty-state">ไม่มีสมาชิกที่ตรงเงื่อนไข</td></tr>`;
+    return;
+  }
+  tbody.innerHTML = filtered.map(p => {
+    const [bg, fg] = getColor(p.name);
+    const initials = getInitials(p.name);
+    const isPaid = p.status === 'paid';
+    const amt = p.customAmount != null ? p.customAmount : defaultPerPerson;
+    const isCustom = p.customAmount != null;
+    return `
+    <tr>
+      <td colspan="5" style="padding:0;">
+        <div class="player-card-row">
+          <div class="player-card-left">
+            <div class="pname" style="margin-bottom:3px;">
+              <span class="avatar" style="background:${bg};color:${fg};">${initials}</span>
+              <span style="font-weight:500;">${p.name}</span>
+            </div>
+            ${p.note ? `<div style="font-size:12px;color:var(--muted);font-style:italic;margin-left:36px;">${p.note}</div>` : ''}
+          </div>
+          <div class="player-card-right">
+            <div style="display:flex;align-items:center;gap:5px;">
+              <span class="tag ${p.status}" onclick="toggleStatus('${p.id}')" style="cursor:pointer;" title="คลิกเพื่อเปลี่ยนสถานะ">
+                ${isPaid ? 'จ่ายแล้ว' : 'ยังไม่จ่าย'}
+              </span>
+              <button class="btn-icon" onclick="openEditPlayer('${p.id}')" title="แก้ไข">
+                <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+              </button>
+              <button class="btn-icon danger" onclick="deletePlayer('${p.id}')">
+                <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6M10 11v6M14 11v6M9 6V4h6v2"/></svg>
+              </button>
+            </div>
+            <div style="text-align:right;">
+              <span class="amt ${p.status}">฿${amt.toLocaleString()}</span>
+              ${isCustom ? '<span style="font-size:10px;color:var(--muted);display:block;">กำหนดเอง</span>' : ''}
+            </div>
+          </div>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+
+  // Footer — sum actual amounts
+  const collectedAmt = players.filter(p => p.status === 'paid').reduce((s, p) => s + (p.customAmount || defaultPerPerson), 0);
+  const remainingAmt = players.filter(p => p.status === 'due').reduce((s, p) => s + (p.customAmount || defaultPerPerson), 0);
+  document.getElementById('footCollected').textContent = `฿${collectedAmt.toLocaleString()}`;
+  document.getElementById('footRemaining').textContent = `฿${remainingAmt.toLocaleString()}`;
+}
+
+function renderSummary() {
+  const sess = currentSession();
+  const players = sess ? sess.players : [];
+  const defaultPerPerson = players.length && sess ? Math.round(sess.cost / players.length) : 0;
+  const collectedAmt = players.filter(p => p.status === 'paid').reduce((s, p) => s + (p.customAmount || defaultPerPerson), 0);
+  const total = sess ? sess.cost : 0;
+  const remaining = total - collectedAmt;
+  const pct = total > 0 ? Math.round(collectedAmt / total * 100) : 0;
+
+  document.getElementById('sumTotal').textContent = `฿${total.toLocaleString()}`;
+  document.getElementById('sumCollected').textContent = `฿${collectedAmt.toLocaleString()}`;
+  document.getElementById('sumRemaining').textContent = `฿${Math.max(0, remaining).toLocaleString()}`;
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressLabel').textContent = `${pct}% ของเป้าหมาย`;
+}
+
+function renderBarChart() {
+  const chart = document.getElementById('barChart');
+  const sessions = state.sessions.slice(0, 6).reverse();
+  if (!sessions.length) {
+    chart.innerHTML = '<div class="empty-state" style="padding:8px;font-size:12px;width:100%;">ยังไม่มีข้อมูล</div>';
+    return;
+  }
+  const maxCost = Math.max(...sessions.map(s => s.cost), 1);
+  chart.innerHTML = sessions.map(s => {
+    const h = Math.max(8, Math.round((s.cost / maxCost) * 75));
+    const isActive = s.id === state.currentSessionId;
+    const d = new Date(s.date);
+    const months = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+    const lbl = `${d.getDate()} ${months[d.getMonth()]}`;
+    return `
+    <div class="bar-wrap" onclick="selectSession('${s.id}')" style="cursor:pointer;">
+      <div class="bar-val">฿${(s.cost/1000).toFixed(1)}k</div>
+      <div class="bar" style="height:${h}px;background:${isActive ? 'var(--green)' : '#9FE1CB'};"></div>
+      <div class="bar-lbl">${lbl}</div>
+    </div>`;
+  }).join('');
+}
+
+// INIT
+load();
+
+// expose all functions to global scope for onclick handlers
+window.openAddSession = openAddSession;
+window.addSession = addSession;
+window.selectSession = selectSession;
+window.deleteSession = deleteSession;
+window.openAddPlayer = openAddPlayer;
+window.addPlayer = addPlayer;
+window.quickAdd = quickAdd;
+window.toggleStatus = toggleStatus;
+window.deletePlayer = deletePlayer;
+window.openEditPlayer = openEditPlayer;
+window.saveEditPlayer = saveEditPlayer;
+window.filterPlayers = filterPlayers;
+window.closeModal = closeModal;
+window.exportExcel = exportExcel;
+</script>
+</body>
+</html>
